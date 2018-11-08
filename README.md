@@ -154,16 +154,25 @@ Additional recommendations:
 
     - _(Do not use more than one space around these operators)_
 
+- Align assingments when on the same level
+
         ```coffeescript
-           # Yes
+           # No
            x = 1
            y = 1
            fooBar = 3
 
-           # No
+           # Yes
            x      = 1
            y      = 1
            fooBar = 3
+
+           # Also yes, but include a newline between the levels
+           x  = 1
+           xy = 2
+
+           other.a    = b
+           other.long = c
         ```
 
 ## Comments
