@@ -17,6 +17,7 @@ The details in this guide have been very heavily inspired by several existing st
 - Thomas Reynolds' [CoffeeScript-specific Style Guide][coffeescript-specific-style-guide]
 - Jeremy Ashkenas' [code review][spine-js-code-review] of [Spine][spine-js]
 - The [CoffeeScript FAQ][coffeescript-faq]
+- The [Weaver-Server style-guide][ws-styleguide]
 
 ## Table of Contents
 
@@ -26,6 +27,7 @@ The details in this guide have been very heavily inspired by several existing st
         * [Maximum Line Length](#maximum_line_length)
         * [Blank Lines](#blank_lines)
         * [Trailing Whitespace](#trailing_whitespace)
+        * [Newlines at End of File](#newlines_eof)
         * [Optional Commas](#optional_commas)
         * [Encoding](#encoding)
     * [Module Imports](#module_imports)
@@ -39,8 +41,10 @@ The details in this guide have been very heavily inspired by several existing st
     * [Conditionals](#conditionals)
     * [Looping and Comprehensions](#looping_and_comprehensions)
     * [Extending Native Objects](#extending_native_objects)
+    * [Promises](#promises)
     * [Exceptions](#exceptions)
     * [Annotations](#annotations)
+    * [Definedness](#definedness)
     * [Miscellaneous](#miscellaneous)
 
 <a name="code_layout"></a>
@@ -69,6 +73,12 @@ Use a single blank line within the bodies of methods or functions in cases where
 ### Trailing Whitespace
 
 Do not include trailing whitespace on any lines.
+
+
+<a name="newlines_eof"></a>
+### Newlines at End of File
+
+Include a newline at the end of every file.
 
 <a name="optional_commas"></a>
 ### Optional Commas
@@ -108,8 +118,8 @@ UTF-8 is the preferred source file encoding.
 If using a module system (CommonJS Modules, AMD, etc.), `require` statements should be placed on separate lines.
 
 ```coffeescript
-require 'lib/setup'
-Backbone = require 'backbone'
+require('lib/setup')
+Backbone = require('backbone')
 ```
 These statements should be grouped in the following order:
 
@@ -125,15 +135,15 @@ Avoid extraneous whitespace in the following situations:
 - Immediately inside parentheses, brackets or braces
 
     ```coffeescript
-       ($ 'body') # Yes
-       ( $ 'body' ) # No
+       callF('body') # Yes
+       callF( 'body' ) # No
     ```
 
 - Immediately before a comma
 
     ```coffeescript
-       console.log x, y # Yes
-       console.log x , y # No
+       console.log(x, y) # Yes
+       console.log(x , y) # No
     ```
 
 Additional recommendations:
@@ -261,7 +271,7 @@ bar = -> # Yes
 bar = () -> # No
 ```
 
-In cases where method calls are being chained and the code does not fit on a single line, each call should be placed on a separate line and indented by one level (i.e., two spaces), with a leading `.`.
+In cases where method calls are being chained and the code does not fit on a single line, each call should be placed on a separate line and (by default) indented by one level (i.e., two spaces), with a leading `.`. Identing may be skipped as long as the code remains clear (in the case of builders this may be preferable.
 
 ```coffeescript
 [1..3]
@@ -269,48 +279,47 @@ In cases where method calls are being chained and the code does not fit on a sin
   .concat([10..12])
   .filter((x) -> x < 11)
   .reduce((x, y) -> x + y)
+
+new SomethingBuilder()
+.setThingOne(1)
+.setThingTwo(2)
+.build()
 ```
 
-When calling functions, choose to omit or include parentheses in such a way that optimizes for readability. Keeping in mind that "readability" can be subjective, the following examples demonstrate cases where parentheses have been omitted or included in a manner that the community deems to be optimal:
+When calling functions, default to including parenthesis.
+
+These can be ommitted for logging strings to improve readability, but this is the only case we found acceptable so far.
 
 ```coffeescript
-baz 12
-
-brush.ellipse x: 10, y: 20 # Braces can also be omitted or included for readability
+baz(12)
 
 foo(4).bar(8)
 
 obj.value(10, 20) / obj.value(20, 10)
 
-print inspect value
-
 new Tag(new Value(a, b), new Arg(c))
+
+console.log "hi"
+
+getLogger().log("hi")
 ```
 
-You will sometimes see parentheses used to group functions (instead of being used to group function parameters). Examples of using this style (hereafter referred to as the "function grouping style"):
+Do not use parentheses to group functions (instead of being used to group function parameters). Examples of using this style (hereafter referred to as the "function grouping style"):
 
 ```coffeescript
-($ '#selektor').addClass 'klass'
+($ '#selektor').addClass('klass') # No
 
-(foo 4).bar 8
+(foo 4).bar(8) # No
 ```
 
-This is in contrast to:
+Instead, use the more regular grouping of function parameters:
 
 ```coffeescript
-$('#selektor').addClass 'klass'
+$('#selektor').addClass('klass') # Yes
 
-foo(4).bar 8
+foo(4).bar(8) # Yes
 ```
 
-In cases where method calls are being chained, some adopters of this style prefer to use function grouping for the initial call only:
-
-```coffeescript
-($ '#selektor').addClass('klass').hide() # Initial call only
-(($ '#selektor').addClass 'klass').hide() # All calls
-```
-
-The function grouping style is not recommended. However, **if the function grouping style is adopted for a particular project, be consistent with its usage.**
 
 <a name="strings"></a>
 ## Strings
@@ -394,6 +403,30 @@ Do not modify native objects.
 
 For example, do not modify `Array.prototype` to introduce `Array#forEach`.
 
+<a name="promises"></a>
+## Promises
+
+Prefer a chain of promises over nested promises:
+
+```coffeescript
+# Prefer this
+someCall().then(->
+  someOtherCall()
+).then(->
+  thirdCall()
+)
+
+# Over this
+someCall().then(->
+  someOtherCall().then(->
+    thirdCall()
+  )
+)
+```
+
+Do not use `.catch` unless the rejection can actually be handled. Instead let the error "bubble up" the chain until
+a point in the code where it can be handled properly, do not supress rejections.
+
 <a name="exceptions"></a>
 ## Exceptions
 
@@ -432,25 +465,23 @@ Annotation types:
 
 If a custom annotation is required, the annotation should be documented in the project's README.
 
+<a name="definedness"></a>
+## Definedness
+
+Use `thing?` to check wether something is defined.
+
+Use `thing ?= 1` to assign a value if none has been defined.
+
+Use `thing?.callF()` to call a function if something has been defined.
+
+Use `thing?.member?.other` to obtain nested values if unsure whether they are defined.
+
 <a name="miscellaneous"></a>
 ## Miscellaneous
-
-`and` is preferred over `&&`.
-
-`or` is preferred over `||`.
 
 `is` is preferred over `==`.
 
 `isnt` is preferred over `!=`.
-
-`not` is preferred over `!`.
-
-`or=` should be used when possible:
-
-```coffeescript
-temp or= {} # Yes
-temp = temp || {} # No
-```
 
 Prefer shorthand notation (`::`) for accessing an object's prototype:
 
@@ -462,15 +493,14 @@ Array.prototype.slice # No
 Prefer `@property` over `this.property`.
 
 ```coffeescript
-return @property # Yes
-return this.property # No
+callF(@property) # Yes
+callF(this.property) # No
 ```
 
-However, avoid the use of **standalone** `@`:
-
+Prefer `object.property` over `object['property']`
 ```coffeescript
-return this # Yes
-return @ # No
+callF(thing.name) # Yes
+callF(thing['name']) # No
 ```
 
 Avoid `return` where not required, unless the explicit return increases clarity.
@@ -483,6 +513,8 @@ console.log args... # Yes
 (a, b, c, rest...) -> # Yes
 ```
 
+Don't use fat arrows for functions when @ is not used.
+
 [coffeescript]: http://jashkenas.github.com/coffee-script/
 [coffeescript-issue-425]: https://github.com/jashkenas/coffee-script/issues/425
 [spine-js]: http://spinejs.com/
@@ -494,3 +526,4 @@ console.log args... # Yes
 [coffeescript-specific-style-guide]: http://awardwinningfjords.com/2011/05/13/coffeescript-specific-style-guide.html
 [coffeescript-faq]: https://github.com/jashkenas/coffee-script/wiki/FAQ
 [camel-case-variations]: http://en.wikipedia.org/wiki/CamelCase#Variations_and_synonyms
+[ws-style-guide]: https://github.com/weaverplatform/weaver-server/blob/develop/coding-style.md
