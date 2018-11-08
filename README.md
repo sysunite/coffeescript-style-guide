@@ -255,7 +255,7 @@ bar = -> # Yes
 bar = () -> # No
 ```
 
-In cases where method calls are being chained and the code does not fit on a single line, each call should be placed on a separate line and (by default) indented by one level (i.e., two spaces), with a leading `.`. Identing may be skipped as long as the code remains clear (in the case of builders this may be preferable.
+In cases where method calls are being chained and the code does not fit on a single line, each call should be placed on a separate line and (by default) indented by one level (i.e., two spaces), with a leading `.`. Identing may be skipped as long as the code remains clear (in the case of builders this may be preferable).
 
 ```coffeescript
 [1..3]
@@ -272,7 +272,8 @@ new SomethingBuilder()
 
 When calling functions, default to including parenthesis.
 
-These can be ommitted for logging strings to improve readability, but this is the only case we found acceptable so far.
+These can be ommitted to improve readability, but use this with great care. Logging and Mocha tests frequently omit
+them.
 
 ```coffeescript
 baz(12)
@@ -286,6 +287,11 @@ new Tag(new Value(a, b), new Arg(c))
 console.log "hi"
 
 getLogger().log("hi")
+
+describe 'a class', ->
+  it 'should do a thing', ->
+    expect thing to be 'done'
+
 ```
 
 Do not use parentheses to group functions (instead of being used to group function parameters). Examples of using this style (hereafter referred to as the "function grouping style"):
