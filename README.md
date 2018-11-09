@@ -156,24 +156,24 @@ Additional recommendations:
 
 - Align assingments when on the same level
 
-        ```coffeescript
-           # No
-           x = 1
-           y = 1
-           fooBar = 3
+    ```coffeescript
+       # Yes
+       x      = 1
+       y      = 1
+       fooBar = 3
 
-           # Yes
-           x      = 1
-           y      = 1
-           fooBar = 3
+       # No
+       x = 1
+       y = 1
+       fooBar = 3
 
-           # Also yes, but include a newline between the levels
-           x  = 1
-           xy = 2
+       # Also yes, but include a newline between the levels
+       x  = 1
+       xy = 2
 
-           other.a    = b
-           other.long = c
-        ```
+       other.a    = b
+       other.long = c
+    ```
 
 ## Comments
 
