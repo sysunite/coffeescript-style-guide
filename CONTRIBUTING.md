@@ -12,7 +12,7 @@ following into account:
 - Include rationale for changes if the contents of the change do not make it
   obvious. Lengthy considerations should be part of the PR description, not the
   styleguide.
-- The length an approved PR remains open depends on how 'controverial' the
+- The length an approved PR remains open depends on how 'controversial' the
   change is so everyone can get their opinion in.
 
 Follow the [GNU Kind Communication Guidelines](https://www.gnu.org/philosophy/kind-communication.html)
