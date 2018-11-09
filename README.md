@@ -152,7 +152,7 @@ if somethingrather
   
 # No
 throw new Exception(
-  "this is no longer too long
+  "this is no longer too long"
 ) when somethingrather
 ```  
 
