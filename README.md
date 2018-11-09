@@ -46,6 +46,7 @@ The details in this guide have been very heavily inspired by several existing st
     * [Annotations](#annotations)
     * [Definedness](#definedness)
     * [Miscellaneous](#miscellaneous)
+    * [Linting](#linting)
 
 ## Code layout
 
@@ -494,6 +495,20 @@ console.log args... # Yes
 ```
 
 Don't use fat arrows for functions when @ is not used.
+
+### Linting
+
+Included in this repo is a coffeelint configuration file that should not be
+incompatible with this guide.
+
+Run it by:
+```
+# Install it globally
+yarn global add @fellow/coffeelint2
+
+# Check files
+coffeelint -f coffeelint.json <TARGET FILE/DIR>
+```
 
 [coffeescript]: https://github.com/jashkenas/coffeescript/
 [coffeescript-issue-425]: https://github.com/jashkenas/coffeescript/issues/425
