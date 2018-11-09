@@ -29,6 +29,7 @@ The details in this guide have been very heavily inspired by several existing st
         * [Trailing Whitespace](#trailing-whitespace)
         * [Newlines at End of File](#newlines-at-end-of-file)
         * [Optional Commas](#optional-commas)
+        * [Line Wrapping](#line-wrapping)
         * [Encoding](#encoding)
     * [Module Imports](#module-imports)
     * [Whitespace in Expressions and Statements](#whitespace-in-expressions-and-statements)
@@ -98,6 +99,51 @@ bar:
   label: 'test',
   value: 87
 ```
+
+### Line Wrapping
+When a line becomes too long, wrap it according to these rules:
+
+```coffeescript
+callFunction(
+  argument1,
+  argument2,
+  argument3
+) # Yes
+ 
+callFunction(argument1,
+  argument2,
+  argument3) # No
+ 
+callFunction(callNested(
+  argument1,
+  argument2
+)) # Yes
+ 
+callFunction(
+  callNested(
+    argument1,
+    argument2
+  )
+) # Yes
+ 
+# Indent an additional level for arguments lists of things that have a body so
+#   arguments and body are not confused. Also include the first element of the 
+#   arguments on the same line as the opening paren, and the closing paren on 
+#   the same line as the last argument
+newFunction = (argument1,
+    argument2,
+    argument3) -> 
+  argument1, + argument2 / argument3
+  
+  
+console.log("This is 
+  a long log statement"
+) # Yes
+
+console.log "This is 
+  a long log statement as well
+" # No, when wrapping long lines always use parentheses for function arguments
+```  
 
 ### Encoding
 
