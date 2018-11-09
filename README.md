@@ -144,7 +144,7 @@ console.log "This is
   a long log statement as well
 " # No, when wrapping long lines always use parentheses for function arguments
 
-throw new Exception("this is too long") when somethingrather # Suppose this is too long
+throw new Exception("this is too long") if somethingrather # Suppose this is too long
 
 # Yes
 if somethingrather
@@ -153,7 +153,7 @@ if somethingrather
 # No
 throw new Exception(
   "this is no longer too long"
-) when somethingrather
+) if somethingrather
 ```  
 
 ### Encoding
